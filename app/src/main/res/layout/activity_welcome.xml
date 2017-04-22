@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="csc3380.lsu.rmettig.ssid.Login">
+    tools:context="csc3380.lsu.rmettig.ssid.Welcome">
 
     <Button
         android:id="@+id/btnRegisterNew"
