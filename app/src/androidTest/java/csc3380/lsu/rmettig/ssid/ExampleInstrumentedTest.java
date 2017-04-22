@@ -1,4 +1,4 @@
-package csc3380.lsu.rmettig.login;
+package csc3380.lsu.rmettig.ssid;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

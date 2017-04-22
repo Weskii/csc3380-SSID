@@ -1,4 +1,4 @@
-package csc3380.lsu.rmettig.login;
+package csc3380.lsu.rmettig.ssid;
 
 import org.junit.Test;
 

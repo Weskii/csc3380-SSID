@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Login</string>
+    <string name="name">Name</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="fullName">Name</string>
+    <string name="newPassword">Password</string>
+    <string name="btnRegister">Register</string>
+    <string name="newUsername">Username</string>
+    <string name="verifypassword">Verify Password</string>
+    <string name="_000">000</string>
 </resources>
