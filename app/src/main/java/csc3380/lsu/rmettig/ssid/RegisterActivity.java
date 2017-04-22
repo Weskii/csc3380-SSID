@@ -16,8 +16,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         //gets content from the elements in the form
         final EditText edtNewUsername = (EditText) findViewById(R.id.edtNewUser);
-        final EditText edtVerifyPw = (EditText) findViewById(R.id.edtVerifyPw);
-        final EditText edtNewPassword = (EditText) findViewById(R.id.edtPassword);
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {

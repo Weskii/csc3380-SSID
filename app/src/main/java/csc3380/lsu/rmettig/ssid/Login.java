@@ -21,7 +21,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent registerIntent = new Intent(Login.this, RegisterActivity.class);
-                Login.this.startActivity(registerIntent);
+                startActivity(registerIntent);
             }
         });
 
@@ -29,7 +29,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent loginIntent = new Intent(Login.this, UserAreaActivity.class);
-                Login.this.startActivity(loginIntent);
+                startActivity(loginIntent);
             }
         });
     }
