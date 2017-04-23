@@ -8,13 +8,13 @@ import android.widget.ImageView;
 
 public class UserAreaActivity extends AppCompatActivity {
 
-    Shark myShark = new Shark("whaleshark");
+    //Shark myShark = new Shark("whaleshark");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
-        final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
+        /*final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
         final ImageView btnInventory = (ImageView) findViewById(R.id.btnInventory);
 
         btnPet.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +32,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 //UserAreaActivity.this.startActivity(inventoryIntent);
             }
         });
+        */
 
     }
 }

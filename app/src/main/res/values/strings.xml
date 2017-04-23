@@ -10,4 +10,9 @@
     <string name="newUsername">Username</string>
     <string name="verifypassword">Verify Password</string>
     <string name="_000">000</string>
+    <string name="create_shark">CREATE SHARK</string>
+    <string name="select_an_egg">SELECT AN EGG</string>
+    <string name="whale">whale</string>
+    <string name="hammerhead">hammerhead</string>
+    <string name="greatwhite">greatwhite</string>
 </resources>
