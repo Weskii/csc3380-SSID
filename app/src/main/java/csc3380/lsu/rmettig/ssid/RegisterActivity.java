@@ -12,9 +12,9 @@ import android.widget.RadioButton;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Shark newShark = null;
-    String sharkType = "";
-    String username = "";
+    public Shark newShark = null;
+    protected String sharkType = "";
+    protected String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent registerIntent = new Intent(RegisterActivity.this, UserAreaActivity.class);
 
+                username = edtNewUsername.getText().toString();
+
                 if(rbtGreatWhite.isChecked())
                     sharkType = "greatwhite";
                 if(rbtHammerHead.isChecked())
@@ -43,10 +45,24 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (!sharkType.equals("")&&!username.equals("")) {
                     newShark = new Shark(sharkType);
-                    //RegisterActivity.this.startActivity(registerIntent);
+                    //registerIntent.putExtra(newShark,);
+                    RegisterActivity.this.startActivity(registerIntent);
                 }
                 else {
-                    new AlertDialog.Builder(RegisterActivity.this).setMessage("You must select an egg!!");
+                    if(sharkType.equals(""))
+                        new AlertDialog.Builder(RegisterActivity.this)
+                            .setTitle("Error")
+                            .setMessage("You must select an egg!!")
+                            .setNeutralButton("Ok", null)
+                            .create()
+                            .show();
+                    if(username.equals(""))
+                        new AlertDialog.Builder(RegisterActivity.this)
+                                .setTitle("Error")
+                                .setMessage("Please enter a username!!")
+                                .setNeutralButton("Ok", null)
+                                .create()
+                                .show();
                 }
             }
         });

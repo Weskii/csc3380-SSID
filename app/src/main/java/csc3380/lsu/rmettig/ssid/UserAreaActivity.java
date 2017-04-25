@@ -8,14 +8,25 @@ import android.widget.ImageView;
 
 public class UserAreaActivity extends AppCompatActivity {
 
-    //Shark myShark = new Shark("whaleshark");
+    Shark myShark;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
-        /*final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
+        myShark = new Shark("greatwhite"); //for testing purposes
+
+        final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
         final ImageView btnInventory = (ImageView) findViewById(R.id.btnInventory);
+        final ImageView imgShark = (ImageView) findViewById(R.id.myShark);
+
+        if(myShark.getSpecies().equals("greatwhite"))
+            imgShark.setImageResource(R.drawable.greatwhite);
+        if(myShark.getSpecies().equals("hammerhead"))
+            imgShark.setImageResource(R.drawable.hammerhead);
+        if(myShark.getSpecies().equals("whale"))
+            imgShark.setImageResource(R.drawable.whaleshark);
 
         btnPet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,11 +39,11 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //new UI
-                //Intent inventoryIntent = new Intent(UserAreaActivity.this, InventoryActivity.class);
-                //UserAreaActivity.this.startActivity(inventoryIntent);
+                Intent inventoryIntent = new Intent(UserAreaActivity.this, InventoryActivity.class);
+                UserAreaActivity.this.startActivity(inventoryIntent);
             }
         });
-        */
+
 
     }
 }
