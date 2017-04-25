@@ -11,7 +11,7 @@
         android:id="@+id/bgStatic"
         android:layout_width="467dp"
         android:layout_height="571dp"
-        android:layout_marginBottom="-430dp"
+        android:layout_marginBottom="-512dp"
         android:clickable="false"
         android:contentDescription=""
         app:layout_constraintBottom_toTopOf="parent"
@@ -36,15 +36,15 @@
         android:id="@+id/txtShellCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="22dp"
         android:text="0"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold"
+        tools:ignore="HardcodedText,RtlHardcoded"
         app:layout_constraintRight_toLeftOf="@+id/icnShellCount"
+        android:layout_marginRight="11dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlHardcoded" />
+        android:layout_marginTop="22dp" />
 
     <ImageView
         android:id="@+id/btnPet"
@@ -78,18 +78,19 @@
         android:layout_width="29dp"
         android:layout_height="30dp"
         app:srcCompat="@drawable/seashell"
-        tools:layout_editor_absoluteY="16dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="ContentDescription,RtlHardcoded" />
+        tools:ignore="ContentDescription,RtlHardcoded"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/happiness"
+        android:id="@+id/txtHappiness"
         android:layout_width="103dp"
         android:layout_height="27dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="22dp"
-        android:text="1000"
+        android:text="@string/_1000"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -108,8 +109,31 @@
         android:layout_marginTop="22dp"
         app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/happiness"
+        app:layout_constraintRight_toLeftOf="@+id/txtHappiness"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/smiley"
+        android:contentDescription=""
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/sharkName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/smiley"
+        android:text="@string/shark"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/myShark"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.146"
+        tools:ignore="RtlHardcoded" />
 
 </android.support.constraint.ConstraintLayout>
