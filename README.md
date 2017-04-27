@@ -1,5 +1,4 @@
 # csc3380-SSID
-Social network back end homework developed for Advanced OOP class
 
 Compilation instructions:
 
