@@ -1,6 +1,8 @@
 package csc3380.lsu.rmettig.ssid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,16 +12,27 @@ import android.widget.TextView;
 public class UserAreaActivity extends AppCompatActivity {
 
     Shark myShark;
-    long lastTimeStamp = 0;
-    long currentTimeStamp;
-    int happiness;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
+        final WifiManager wfm=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        myShark = new Shark("greatwhite"); //for testing purposes
+        final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
+        final ImageView btnInventory = (ImageView) findViewById(R.id.btnInventory);
+        final ImageView imgShark = (ImageView) findViewById(R.id.myShark);
+        final ImageView btnCoin = (ImageView) findViewById(R.id.btnCoin);
+        final TextView txtHappiness = (TextView) findViewById(R.id.txtHappiness);
+        final TextView txtShellCount = (TextView) findViewById(R.id.txtShellCount);
+        final TextView sharkName = (TextView) findViewById(R.id.sharkName);
+        myShark = new Shark("greatwhite", wfm); //for testing purposes
+        //myShark.loadShark();
+        txtShellCount.setText(String.valueOf(myShark.getCoins()));
+        txtHappiness.setText(String.valueOf(myShark.getHapp()));
+
+
+
 
         /*
         currentTimeStamp = System.currentTimeMillis()/10000;
@@ -28,11 +41,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         myShark.setHapp(happiness);
 */
-        final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
-        final ImageView btnInventory = (ImageView) findViewById(R.id.btnInventory);
-        final ImageView imgShark = (ImageView) findViewById(R.id.myShark);
-        final TextView txtHappiness = (TextView) findViewById(R.id.txtHappiness);
-        final TextView sharkName = (TextView) findViewById(R.id.sharkName);
+
 
         //txtHappiness.setText(myShark.getHapp());
         sharkName.setText("Sharkie"); //change input
@@ -48,6 +57,14 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 myShark.petShark();
+                txtHappiness.setText(String.valueOf(myShark.getHapp()));
+            }
+        });
+
+        btnCoin.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                myShark.coinScan();
+                txtShellCount.setText(String.valueOf(myShark.getCoins()));
             }
         });
 

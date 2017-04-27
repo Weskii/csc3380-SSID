@@ -9,17 +9,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.net.wifi.WifiManager;
+import android.content.Context;
+
 
 public class RegisterActivity extends AppCompatActivity {
+
 
     public Shark newShark = null;
     protected String sharkType = "";
     protected String username = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register); //binds the xml file to this class
+        final WifiManager wfm=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         //gets content from the elements in the form
         final EditText edtNewUsername = (EditText) findViewById(R.id.edtNewUser);
@@ -44,8 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
                     sharkType = "whale";
 
                 if (!sharkType.equals("")&&!username.equals("")) {
-                    newShark = new Shark(sharkType);
-                    //registerIntent.putExtra(newShark,);
+                    newShark = new Shark(sharkType, wfm);
+                    //newShark.saveShark();
                     RegisterActivity.this.startActivity(registerIntent);
                 }
                 else {

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="csc3380.lsu.rmettig.ssid">
     <user-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +21,7 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".UserAreaActivity" />
+        <activity android:name=".InventoryActivity"/>
     </application>
 
 </manifest>
