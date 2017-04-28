@@ -1,6 +1,8 @@
 package csc3380.lsu.rmettig.ssid;
 
-public class Item{
+import java.io.Serializable;
+
+public class Item implements Serializable{
    private String name="";
    private int numberOf;
    private int price;

@@ -16,30 +16,22 @@ import android.content.Context;
 public class RegisterActivity extends AppCompatActivity {
 
 
-    public Shark newShark = null;
     protected String sharkType = "";
-    protected String username = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register); //binds the xml file to this class
-        final WifiManager wfm=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         //gets content from the elements in the form
-        final EditText edtNewUsername = (EditText) findViewById(R.id.edtNewUser);
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
         final RadioButton rbtGreatWhite = (RadioButton) findViewById(R.id.rbtGreatWhite);
         final RadioButton rbtHammerHead = (RadioButton) findViewById(R.id.rbtHammerHead);
         final RadioButton rbtWhale = (RadioButton) findViewById(R.id.rbtWhale);
 
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent registerIntent = new Intent(RegisterActivity.this, UserAreaActivity.class);
-
-                username = edtNewUsername.getText().toString();
-
                 if(rbtGreatWhite.isChecked())
                     sharkType = "greatwhite";
                 if(rbtHammerHead.isChecked())
@@ -47,26 +39,18 @@ public class RegisterActivity extends AppCompatActivity {
                 if(rbtWhale.isChecked())
                     sharkType = "whale";
 
-                if (!sharkType.equals("")&&!username.equals("")) {
-                    newShark = new Shark(sharkType, wfm);
-                    //newShark.saveShark();
+                if (!sharkType.equals("")){
+                    registerIntent.putExtra("sharkType", sharkType);
+                    registerIntent.putExtra("sendingIntent","RegisterActivity");
                     RegisterActivity.this.startActivity(registerIntent);
-                }
-                else {
-                    if(sharkType.equals(""))
-                        new AlertDialog.Builder(RegisterActivity.this)
-                            .setTitle("Error")
-                            .setMessage("You must select an egg!!")
-                            .setNeutralButton("Ok", null)
-                            .create()
-                            .show();
-                    if(username.equals(""))
-                        new AlertDialog.Builder(RegisterActivity.this)
-                                .setTitle("Error")
-                                .setMessage("Please enter a username!!")
-                                .setNeutralButton("Ok", null)
-                                .create()
-                                .show();
+                    finish();
+                }else{
+                    new AlertDialog.Builder(RegisterActivity.this)
+                          .setTitle("Error")
+                          .setMessage("You must select an egg!!")
+                          .setNeutralButton("Ok", null)
+                          .create()
+                          .show();
                 }
             }
         });
@@ -74,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         rbtGreatWhite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rbtGreatWhite.setChecked(true);
                 rbtHammerHead.setChecked(false);
                 rbtWhale.setChecked(false);
             }
@@ -82,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         rbtHammerHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rbtHammerHead.setChecked(true);
                 rbtGreatWhite.setChecked(false);
                 rbtWhale.setChecked(false);
             }
@@ -90,6 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
         rbtWhale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rbtWhale.setChecked(true);
                 rbtGreatWhite.setChecked(false);
                 rbtHammerHead.setChecked(false);
             }

@@ -1,46 +1,36 @@
 package csc3380.lsu.rmettig.ssid;
 
-import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-
 import java.util.ArrayList;
 import java.io.*;
 import java.util.List;
 
-public class Shark {
+public class Shark implements Serializable{
    //private variables
    private long timeStamp=0;
-   private int coins;
+   private int coins=0;
    private int happ=0;
    private int hunger=0;
    private boolean hasHat=false;
    private String hatName="";
    private String species="";
-   private ArrayList<Item> inventory=new ArrayList<Item>();
+   public ArrayList<Item> inventory=new ArrayList<>();
+   public ArrayList<String> newNames=new ArrayList<>();
+   private ArrayList<String> registeredNames = new ArrayList<>();
    private WifiManager wifeMan;
-
-   public class regName{
-      public String regSSID;
-      public long regTime;
-      public regName(String name, long time){
-         regSSID=name;
-         regTime=time;
-      }
-      @Override
-      public boolean equals(Object o){
-         if (regSSID == o) return true;
-         else return false;
-      }
-   }
-
-   private ArrayList<regName> registeredNames = new ArrayList<>();
+   private File sharkStorage;
 
    //constructors
-   public Shark(String type, WifiManager wfm){
-       wifeMan=wfm;
-       species=type;
-       initializeInventory();
+   public Shark(String type, File save){
+      sharkStorage=save;
+      species=type;
+      initializeInventory();
+   }
+
+   public Shark(File save){
+      sharkStorage=save;
+      initializeInventory();
    }
 
    //accessors
@@ -60,13 +50,13 @@ public class Shark {
     public void initializeInventory(){
         inventory.add(new Item("candy", 25));
         inventory.add(new Item("cookie", 50));
-        inventory.add(new Item("badfish", 10));
+        inventory.add(new Item("fish", 10));
         inventory.add(new Item("cutefish", 75));
         inventory.add(new Item("icecream", 200));
         inventory.add(new Item("lollipop", 100));
         inventory.add(new Item("cowboyhat", 200));
         inventory.add(new Item("witchhat", 400));
-        inventory.add(new Item("copyrighthat", 1000));
+        inventory.add(new Item("copyrightinfringementhat", 1000));
         inventory.add(new Item("piratehat", 800));
         inventory.add(new Item("tophat",600));
     }
@@ -93,23 +83,23 @@ public class Shark {
       if (invItem(name).getName().contains("hat")){
          giveHat(name);
       }
-      else
+      else {
          invItem(name).decItem();
-         setHapp(invItem(name).getPrice()/2);
+         setHapp(invItem(name).getPrice() / 2);
          setHunger(-10);
+      }
    }
 
    //save data to file
    public void saveShark(){
       timeStamp = System.currentTimeMillis();
-      String filename="sharkStorage";
       String tmp=Long.toString(timeStamp)+coins+" "+happ+" "+hunger+" "+species+" ";
       if (hasHat) {tmp=tmp+"1"+hatName+"\n";}
       else tmp=tmp+"0\n";
       for (Item e:inventory){tmp=tmp+e.getNumber()+" ";}
 
       try{
-         FileOutputStream out=new FileOutputStream(filename);
+         FileOutputStream out=new FileOutputStream(sharkStorage);
          out.write(tmp.getBytes());
          out.close();
       }catch(Exception e){/*ignore exceptions*/}
@@ -117,45 +107,47 @@ public class Shark {
 
    //load data from file
    public void loadShark(){
-      long newTimeStamp = System.currentTimeMillis();
-      String filename="sharkStorage";
-      String inString="";
-      String tmp="";
-      try{
-         FileReader in=new FileReader(filename);
-         BufferedReader read=new BufferedReader(in);
-         while ((tmp=read.readLine())!=null){inString=inString+tmp;}
-      }catch(Exception e){/*ignore exceptions*/}
-      String[] inStringArr=inString.split("\\s+");
-      timeStamp=Long.parseLong(inStringArr[0]);
-      coins=Integer.parseInt(inStringArr[1]);
-      happ=Integer.parseInt(inStringArr[2]);
-      hunger=Integer.parseInt(inStringArr[3]);
-      species=inStringArr[4];
-      happ=happ-((int)newTimeStamp-(int)timeStamp)/60000;
-      hunger=hunger+((int)newTimeStamp-(int)timeStamp)/60000;
-      int cnt=0;
-      for (Item e:inventory){
-         e.setNumber(Integer.parseInt(inStringArr[4+cnt]));
-         cnt++;
+      if(sharkStorage.exists()) {
+         long newTimeStamp = System.currentTimeMillis();
+         String inString = "";
+         String tmp = "";
+         try {
+            FileReader in = new FileReader(sharkStorage);
+            BufferedReader read = new BufferedReader(in);
+            while ((tmp = read.readLine()) != null) {
+               inString = inString + tmp;
+            }
+         } catch (Exception e) {/*ignore exceptions*/}
+         String[] inStringArr = inString.split("\\s+");
+         timeStamp = Long.parseLong(inStringArr[0]);
+         coins = Integer.parseInt(inStringArr[1]);
+         happ = Integer.parseInt(inStringArr[2]);
+         hunger = Integer.parseInt(inStringArr[3]);
+         species = inStringArr[4];
+         happ = happ - ((int) newTimeStamp - (int) timeStamp) / 60000;
+         hunger = hunger + ((int) newTimeStamp - (int) timeStamp) / 60000;
+         int cnt = 0;
+         for (Item e : inventory) {
+            e.setNumber(Integer.parseInt(inStringArr[4 + cnt]));
+            cnt++;
+         }
       }
    }
 
-   public void coinScan(){
+   public void coinScan(List<ScanResult> scanList){
+      newNames.clear();
       int cnt=0;
       long currTime=System.currentTimeMillis();
       //purge old names from list
-      for (regName reg:registeredNames){
-         if (currTime-reg.regTime>21600000)
-            registeredNames.remove(reg);
+      if(currTime-timeStamp > 14400000) {
+         registeredNames.clear();
+         timeStamp=currTime;
       }
-      registeredNames.trimToSize();
       //add new names to list
-      wifeMan.startScan();
-      List<ScanResult> scanList=wifeMan.getScanResults();
       for (ScanResult res:scanList){
-         if(!registeredNames.contains(res.SSID)){
-            registeredNames.add(new regName(res.SSID,currTime));
+         if(!registeredNames.contains(res.SSID)) {
+            registeredNames.add(res.SSID);
+            newNames.add(res.SSID);
             cnt++;
          }
       }
