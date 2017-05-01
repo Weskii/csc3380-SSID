@@ -1,7 +1,8 @@
 package csc3380.lsu.rmettig.ssid;
 
+import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.List;
@@ -9,54 +10,48 @@ import java.util.List;
 public class Shark implements Serializable{
    //private variables
    private long timeStamp=0;
-   private int coins=0;
+   private int coins=1000;
    private int happ=0;
-   private int hunger=0;
    private boolean hasHat=false;
    private String hatName="";
    private String species="";
    public ArrayList<Item> inventory=new ArrayList<>();
    public ArrayList<String> newNames=new ArrayList<>();
    private ArrayList<String> registeredNames = new ArrayList<>();
-   private WifiManager wifeMan;
-   private File sharkStorage;
+   private transient SharedPreferences sharkStats;
+
 
    //constructors
-   public Shark(String type, File save){
-      sharkStorage=save;
+   public Shark(String type, SharedPreferences pref){
       species=type;
+      sharkStats=pref;
       initializeInventory();
    }
 
-   public Shark(File save){
-      sharkStorage=save;
-      initializeInventory();
-   }
+   public Shark(){}
 
    //accessors
    public int getHapp(){return happ;}
-   public int getHunger(){return hunger;}
-   public boolean getHat(){return hasHat;}
+   public String getHat(){return hatName;}
    public String getSpecies(){return species;}
    public int getCoins(){return coins;}
+   public ArrayList<Item> getInventory(){return inventory;}
 
    //basic mutators
    public void setCoins(int delta){coins=coins+delta;}
    public void setHapp(int delta){if(happ<1000) happ=happ+delta;}
-   public void setHunger(int delta){if(hunger>0) hunger=hunger+delta;}
    public void petShark(){setHapp(5);}
    public void setHat(boolean set){hasHat=set;}
 
     public void initializeInventory(){
         inventory.add(new Item("candy", 25));
         inventory.add(new Item("cookie", 50));
-        inventory.add(new Item("fish", 10));
-        inventory.add(new Item("cutefish", 75));
+        inventory.add(new Item("fish", 5));
         inventory.add(new Item("icecream", 200));
         inventory.add(new Item("lollipop", 100));
         inventory.add(new Item("cowboyhat", 200));
         inventory.add(new Item("witchhat", 400));
-        inventory.add(new Item("copyrightinfringementhat", 1000));
+        inventory.add(new Item("copyrighthat", 1000));
         inventory.add(new Item("piratehat", 800));
         inventory.add(new Item("tophat",600));
     }
@@ -66,72 +61,45 @@ public class Shark implements Serializable{
       this.hatName=hatName;
       setHat(true);
    }
-   
-   //inventory management
-   public Item invItem(String name){
-      return inventory.get(inventory.indexOf(name));
-   }
 
-   public void buyItem(String name){
-      if (invItem(name).getPrice()>coins) return;
-      invItem(name).incItem();
-      setCoins(invItem(name).getPrice());
-   }
-
-   public void useItem(String name){
-      if (invItem(name).getNumber()==0) return;
-      if (invItem(name).getName().contains("hat")){
-         giveHat(name);
+   public String buyItem(Item item){
+      if (item.getPrice()>coins)
+         return "Not enough money!";
+      if(item.getHatName().contains("hat")){
+         giveHat(item.getHatName());
       }
-      else {
-         invItem(name).decItem();
-         setHapp(invItem(name).getPrice() / 2);
-         setHunger(-10);
-      }
+      setHapp(item.getPrice()/2);
+      coins=coins-item.getPrice();
+      return "Bought one!";
    }
 
    //save data to file
    public void saveShark(){
-      timeStamp = System.currentTimeMillis();
-      String tmp=Long.toString(timeStamp)+coins+" "+happ+" "+hunger+" "+species+" ";
-      if (hasHat) {tmp=tmp+"1"+hatName+"\n";}
-      else tmp=tmp+"0\n";
-      for (Item e:inventory){tmp=tmp+e.getNumber()+" ";}
-
-      try{
-         FileOutputStream out=new FileOutputStream(sharkStorage);
-         out.write(tmp.getBytes());
-         out.close();
-      }catch(Exception e){/*ignore exceptions*/}
+      SharedPreferences.Editor statEdit=sharkStats.edit();
+      statEdit.clear();
+      Gson gson=new Gson();
+      String inv=gson.toJson(inventory);
+      statEdit.putInt("shells",coins);
+      statEdit.putInt("happ",happ);
+      statEdit.putBoolean("hasHat",hasHat);
+      statEdit.putLong("timeStamp",timeStamp);
+      statEdit.putString("hatName",hatName);
+      statEdit.putString("species",species);
+      statEdit.putString("inventory",inv);
+      statEdit.putBoolean("isFirstRun",false);
+      statEdit.apply();
    }
 
    //load data from file
    public void loadShark(){
-      if(sharkStorage.exists()) {
-         long newTimeStamp = System.currentTimeMillis();
-         String inString = "";
-         String tmp = "";
-         try {
-            FileReader in = new FileReader(sharkStorage);
-            BufferedReader read = new BufferedReader(in);
-            while ((tmp = read.readLine()) != null) {
-               inString = inString + tmp;
-            }
-         } catch (Exception e) {/*ignore exceptions*/}
-         String[] inStringArr = inString.split("\\s+");
-         timeStamp = Long.parseLong(inStringArr[0]);
-         coins = Integer.parseInt(inStringArr[1]);
-         happ = Integer.parseInt(inStringArr[2]);
-         hunger = Integer.parseInt(inStringArr[3]);
-         species = inStringArr[4];
-         happ = happ - ((int) newTimeStamp - (int) timeStamp) / 60000;
-         hunger = hunger + ((int) newTimeStamp - (int) timeStamp) / 60000;
-         int cnt = 0;
-         for (Item e : inventory) {
-            e.setNumber(Integer.parseInt(inStringArr[4 + cnt]));
-            cnt++;
-         }
-      }
+      coins=sharkStats.getInt("shells",0);
+      happ=sharkStats.getInt("happ",0);
+      hasHat=sharkStats.getBoolean("hasHat",false);
+      hatName=sharkStats.getString("hatName",null);
+      species=sharkStats.getString("species",null);
+      timeStamp=sharkStats.getLong("timeStamp",0);
+      Gson gson=new Gson();
+      inventory=gson.fromJson(sharkStats.getString("inventory",null), ArrayList.class);
    }
 
    public void coinScan(List<ScanResult> scanList){

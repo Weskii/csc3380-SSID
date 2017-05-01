@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.net.wifi.WifiManager;
 import android.content.Context;
@@ -16,7 +17,7 @@ import android.content.Context;
 public class RegisterActivity extends AppCompatActivity {
 
 
-    protected String sharkType = "";
+    protected String sharkType="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,9 @@ public class RegisterActivity extends AppCompatActivity {
         final RadioButton rbtGreatWhite = (RadioButton) findViewById(R.id.rbtGreatWhite);
         final RadioButton rbtHammerHead = (RadioButton) findViewById(R.id.rbtHammerHead);
         final RadioButton rbtWhale = (RadioButton) findViewById(R.id.rbtWhale);
+        final ImageView eggWhite = (ImageView) findViewById(R.id.imgGreatWhite);
+        final ImageView eggHammer = (ImageView) findViewById(R.id.imgHammerHead);
+        final ImageView eggWhale = (ImageView) findViewById(R.id.imgWhale);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +78,36 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         rbtWhale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rbtWhale.setChecked(true);
+                rbtGreatWhite.setChecked(false);
+                rbtHammerHead.setChecked(false);
+            }
+        });
+
+
+
+
+        eggWhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rbtGreatWhite.setChecked(true);
+                rbtHammerHead.setChecked(false);
+                rbtWhale.setChecked(false);
+            }
+        });
+
+        eggHammer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rbtHammerHead.setChecked(true);
+                rbtGreatWhite.setChecked(false);
+                rbtWhale.setChecked(false);
+            }
+        });
+
+        eggWhale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rbtWhale.setChecked(true);

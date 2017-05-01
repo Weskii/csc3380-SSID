@@ -18,4 +18,5 @@
     <string name="_1000">1000</string>
     <string name="shark">shark</string>
     <string name="smiley">smiley</string>
+    <string name="title_activity_inventory">InventoryActivity</string>
 </resources>

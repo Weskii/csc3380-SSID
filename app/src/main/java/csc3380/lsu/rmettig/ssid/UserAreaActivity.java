@@ -4,8 +4,10 @@ package csc3380.lsu.rmettig.ssid;
       import android.content.DialogInterface;
       import android.content.Intent;
       import android.content.IntentFilter;
+      import android.content.SharedPreferences;
       import android.net.wifi.ScanResult;
       import android.net.wifi.WifiManager;
+      import android.preference.PreferenceManager;
       import android.support.v7.app.AlertDialog;
       import android.support.v7.app.AppCompatActivity;
       import android.os.Bundle;
@@ -15,17 +17,18 @@ package csc3380.lsu.rmettig.ssid;
       import android.widget.ImageView;
       import android.widget.TextView;
       import android.content.BroadcastReceiver;
+
+      import com.google.gson.Gson;
+
       import java.util.List;
-
-      import java.io.File;
-
 public class UserAreaActivity extends AppCompatActivity {
    Shark myShark;
    WifiManager wfm;
+   Gson gson=new Gson();
+   public static SharedPreferences sharkStats;
    BroadcastReceiver WifiRec = new BroadcastReceiver() {
       @Override
-      public void onReceive(Context context, Intent intent) {
-      }
+      public void onReceive(Context context, Intent intent){}
    };
 
    @Override
@@ -35,16 +38,20 @@ public class UserAreaActivity extends AppCompatActivity {
       final Animation bubbleAnim=AnimationUtils.loadAnimation(this,R.anim.bubbleanim);
       final Animation petAnim=AnimationUtils.loadAnimation(this,R.anim.sharkwiggle);
       final Animation heartAnim=AnimationUtils.loadAnimation(this,R.anim.heartfade);
+      sharkStats=PreferenceManager.getDefaultSharedPreferences(this);
       wfm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
       registerReceiver(WifiRec, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-      final File sharkStorage = new File(getApplicationContext().getFilesDir(), "sharkStorage.txt");
       wfm.startScan();
       final String sendingIntent = getIntent().getStringExtra("sendingIntent");
       if (sendingIntent.equals("RegisterActivity")) {
-         myShark = new Shark(getIntent().getStringExtra("sharkType"), sharkStorage);
+         myShark = new Shark(getIntent().getStringExtra("sharkType"), sharkStats);
+         myShark.saveShark();
       } else if (sendingIntent.equals("Welcome")) {
-         myShark = new Shark(sharkStorage);
+         myShark = new Shark(sharkStats.getString("species",""),sharkStats);
          myShark.loadShark();
+      } else if (sendingIntent.equals("Inventory")) {
+         String jShark=getIntent().getStringExtra("myShark");
+         myShark=gson.fromJson(jShark, Shark.class);
       }
 
       final ImageView btnPet = (ImageView) findViewById(R.id.btnPet);
@@ -54,16 +61,47 @@ public class UserAreaActivity extends AppCompatActivity {
       final TextView txtHappiness = (TextView) findViewById(R.id.txtHappiness);
       final TextView txtShellCount = (TextView) findViewById(R.id.txtShellCount);
       final ImageView imgHearts=(ImageView) findViewById(R.id.hearts);
+      final ImageView imgHat=(ImageView) findViewById(R.id.hat);
 
+      switch(myShark.getHat()){
+         case "":
+            imgHat.setVisibility(View.INVISIBLE);
+            break;
+         case "cowboyhat":
+            imgHat.setVisibility(View.VISIBLE);
+            imgHat.setImageResource((R.drawable.cowboyhat));
+            break;
+         case "witchhat":
+            imgHat.setVisibility(View.VISIBLE);
+            imgHat.setImageResource((R.drawable.witchhat));
+            break;
+         case "copyrighthat":
+            imgHat.setVisibility(View.VISIBLE);
+            imgHat.setImageResource(R.drawable.copyrightinfringementhat);
+            break;
+         case "piratehat":
+            imgHat.setVisibility((View.VISIBLE));
+            imgHat.setImageResource(R.drawable.piratehat);
+            break;
+         case "tophat":
+            imgHat.setVisibility(View.VISIBLE);
+            imgHat.setImageResource(R.drawable.tophat);
+            break;
+      }
       txtShellCount.setText(String.valueOf(myShark.getCoins()));
       txtHappiness.setText(String.valueOf(myShark.getHapp()));
 
-      if (myShark.getSpecies().equals("greatwhite"))
-         imgShark.setImageResource(R.drawable.greatwhite);
-      if (myShark.getSpecies().equals("hammerhead"))
-         imgShark.setImageResource(R.drawable.hammerhead);
-      if (myShark.getSpecies().equals("whale"))
-         imgShark.setImageResource(R.drawable.whaleshark);
+      switch ("greatwhite"){
+         case "greatwhite":
+            imgShark.setImageResource(R.drawable.greatwhite);
+            break;
+         case "hammerhead":
+            imgShark.setImageResource(R.drawable.hammerhead);
+            break;
+         case "whale":
+            imgShark.setImageResource(R.drawable.whaleshark);
+            break;
+      }
 
       btnPet.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -75,7 +113,7 @@ public class UserAreaActivity extends AppCompatActivity {
             imgHearts.startAnimation(heartAnim);
             imgHearts.setVisibility(View.INVISIBLE);
             txtHappiness.setText(String.valueOf(myShark.getHapp()));
-            myShark.saveShark();
+           // myShark.saveShark();
          }
       });
 
@@ -116,8 +154,11 @@ public class UserAreaActivity extends AppCompatActivity {
          public void onClick(View v) {
             btnInventory.startAnimation(bubbleAnim);
             Intent inventoryIntent = new Intent(UserAreaActivity.this, InventoryActivity.class);
-            inventoryIntent.putExtra("sentShark", myShark);
+            Gson gson=new Gson();
+            String jShark=gson.toJson(myShark);
+            inventoryIntent.putExtra("myShark", jShark);
             UserAreaActivity.this.startActivity(inventoryIntent);
+            finish();
          }
       });
    }
